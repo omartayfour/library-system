@@ -1,15 +1,21 @@
 const express = require("express");
 const app = express();
 const { createDatabaseAndTables } = require("./src/db/db");
-const userRoutes = require("./src/models/borrower/routes");
+const borrowerRoutes = require("./src/models/borrower/routes");
+const bookRoutes = require("./src/models/book/routes")
 
 const port = 3000;
+
+app.use(express.json());
+
+app.use("/api/v1/borrowers", borrowerRoutes);
+app.use("/api/v1/books", bookRoutes)
 
 app.get("/", (req, res) => {
   res.send("Hello ");
 });
 
-app.use("/api/v1/borrower", userRoutes);
+
 
 app.listen(port, async () => {
   console.log(`App is listening on port ${port}`);
