@@ -1,16 +1,20 @@
 const { pool } = require('../../db/db')
 
 const getBooks = async (req, res) => {
+  const client = await pool.connect()
   try {
-    console.log(req.query)
     const query = await pool.query('SELECT * FROM books')
     res.status(200).json(query.rows)
   } catch (error) {
     throw error
   }
+  finally {
+    client.release()
+  }
 }
 
 const addBook = async (req, res) => {
+  const client = await pool.connect()
   try {
     const { title, author, isbn, total_quantity, available_quantity, shelf_location } = req.body;
     const query = await
@@ -20,9 +24,13 @@ const addBook = async (req, res) => {
   } catch (error) {
     res.status(400).send(error)
   }
+  finally {
+    client.release()
+  }
 }
 
 const findBookByID = async (req, res) => {
+  const client = await pool.connect()
   try {
     const { id } = req.params
     const query = await pool.query('SELECT * FROM books WHERE id = $1', [id])
@@ -30,10 +38,14 @@ const findBookByID = async (req, res) => {
   } catch (error) {
     throw error
   }
+  finally {
+    client.release()
+  }
 }
 
 
 const deleteBook = async (req, res) => {
+  const client = await pool.connect()
   try {
     const { id } = req.params
     const query = await pool.query('DELETE FROM books WHERE id = $1', [id])
@@ -42,9 +54,12 @@ const deleteBook = async (req, res) => {
   catch (error) {
     throw error
   }
+  finally {
+    client.release()
+  }
 }
 const findBook = async (req, res) => {
-  console.log(req.query)
+  const client = await pool.connect()
   const { title, author, isbn } = req.query
   try {
     let query
@@ -68,6 +83,9 @@ const findBook = async (req, res) => {
   catch (error) {
     console.error('Error finding book:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+  finally {
+    client.release()
   }
 }
 

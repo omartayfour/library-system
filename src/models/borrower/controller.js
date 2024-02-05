@@ -1,14 +1,19 @@
 const { pool } = require('../../db/db')
 const getBorrowers = async (req, res) => {
+  const client = await pool.connect()
   try {
     const query = await pool.query('SELECT * FROM borrowers')
     res.status(200).json(query.rows)
   } catch (error) {
     throw error
   }
+  finally {
+    client.release()
+  }
 }
 
 const findBorrowerByID = async (req, res) => {
+  const client = await pool.connect()
   try {
     const { id } = req.params
     const query = await pool.query('SELECT * FROM borrowers WHERE id = $1', [id])
@@ -16,9 +21,13 @@ const findBorrowerByID = async (req, res) => {
   } catch (error) {
     throw error
   }
+  finally {
+    client.release()
+  }
 }
 
 const addBorrower = async (req, res) => {
+  const client = await pool.connect()
   try {
     const { name, email } = req.body;
     const query = await pool.query('INSERT INTO borrowers (name, email) VALUES ($1, $2) RETURNING *',
@@ -27,9 +36,13 @@ const addBorrower = async (req, res) => {
   } catch (error) {
     res.status(400).send(error)
   }
+  finally {
+    client.release()
+  }
 }
 
 const updateBorrower = async (req, res) => {
+  const client = await pool.connect()
   try {
     const { id } = req.params;
     const { name, email } = req.body;
@@ -40,9 +53,13 @@ const updateBorrower = async (req, res) => {
     console.error('Error updating borrower', error)
     res.status(500).send(error)
   }
+  finally {
+    client.release()
+  }
 }
 
 const deleteBorrower = async (req, res) => {
+  const client = await pool.connect()
   try {
     const { id } = req.params;
     const query = await pool.query('DELETE FROM borrowers WHERE id = $1', [id])
@@ -51,6 +68,9 @@ const deleteBorrower = async (req, res) => {
   catch (error) {
     console.error('Error in deleting', error)
     res.status(500).send(error)
+  }
+  finally {
+    client.release()
   }
 }
 

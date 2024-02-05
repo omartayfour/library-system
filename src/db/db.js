@@ -78,6 +78,8 @@ async function createDatabaseAndTables() {
     console.log("Database and tables have been created!");
   } catch (e) {
     console.error("Error in creating database", e);
+  } finally {
+    client.release()
   }
 }
 
