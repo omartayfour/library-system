@@ -46,12 +46,42 @@ const updateBorrower = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, email } = req.body;
-    const query = await pool.query('UPDATE borrowers SET name = $1, email = $2 WHERE id = $3 RETURNING *',
-      [name, email, id])
-    res.status(200).send(query.rows[0])
+    if (!name && !email) {
+      console.error('Please provide name or email to edit');
+      return res.status(500).send({
+        error: 'Please provide name or email to edit'
+      });
+    }
+
+    const updateFields = [];
+    const values = [];
+    let counter = 1
+
+    if (name) {
+      updateFields.push(`name = $${counter}`);
+      values.push(name);
+      counter++;
+    }
+
+    if (email) {
+      updateFields.push(`email = $${counter}`);
+      values.push(email);
+      counter++;
+    }
+
+    const updateQuery = `
+        UPDATE borrowers
+        SET ${updateFields.join(', ')}
+        WHERE id = $${values.length + 1}
+      `;
+    values.push(parseInt(id));
+
+    await pool.query(updateQuery, values);
+
+    res.sendStatus(200);
   } catch (error) {
-    console.error('Error updating borrower', error)
-    res.status(500).send(error)
+    console.error('Error updating borrower', error);
+    res.sendStatus(500);
   }
   finally {
     client.release()

@@ -1,11 +1,11 @@
 const Pool = require("pg").Pool;
 
 const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "library", // change this name to your created databases name
-  password: "1234",
-  port: 5433,
+  user: "postgres", // username
+  host: "localhost", // host
+  database: "library", // database name
+  password: "1234", // database password
+  port: 5433, // port number
 });
 
 async function createDatabaseAndTables() {
@@ -55,7 +55,7 @@ async function createDatabaseAndTables() {
         );`;
       await client.query(createBorrowersTable);
     }
-    // isbn numbers are typically 13 digits(google searched)
+
     const checkedOutBooksTableExists = await client.query(`
     SELECT EXISTS (
       SELECT 1

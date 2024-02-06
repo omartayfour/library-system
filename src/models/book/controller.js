@@ -88,11 +88,83 @@ const findBook = async (req, res) => {
     client.release()
   }
 }
+const updateBook = async (req, res) => {
+  const client = await pool.connect()
+  try {
+    const { id } = req.params;
+    const { title, author, isbn, total_quantity, available_quantity, shelf_location } = req.body;
+
+    if (!title && !author && !isbn && !total_quantity && !available_quantity && !shelf_location) {
+      console.error('Please provide field to update');
+      return res.status(500).send({
+        error: 'Please provide fields to update'
+      });
+    }
+
+    const updateFields = [];
+    const values = [];
+    let counter = 1
+
+    if (title) {
+      updateFields.push(`title = $${counter}`);
+      values.push(title);
+      counter++;
+    }
+
+    if (author) {
+      updateFields.push(`author = $${counter}`);
+      values.push(author);
+      counter++;
+    }
+
+    if (isbn) {
+      updateFields.push(`isbn = $${counter}`);
+      values.push(isbn);
+      counter++;
+    }
+
+    if (total_quantity) {
+      updateFields.push(`total_quantity = $${counter}`);
+      values.push(total_quantity);
+      counter++;
+    }
+
+    if (available_quantity) {
+      updateFields.push(`available_quantity = $${counter}`);
+      values.push(available_quantity);
+      counter++;
+    }
+
+    if (shelf_location) {
+      updateFields.push(`shelf_location = $${counter}`);
+      values.push(shelf_location);
+      counter++;
+    }
+
+    const updateQuery = `
+        UPDATE books
+        SET ${updateFields.join(', ')}
+        WHERE id = $${values.length + 1}
+      `;
+    values.push(parseInt(id));
+
+    await pool.query(updateQuery, values);
+
+    res.sendStatus(200);
+  } catch (error) {
+    console.error('Error updating book', error);
+    res.sendStatus(500);
+  } finally {
+    client.release()
+  }
+}
 
 module.exports = {
+  updateBook,
   getBooks,
   findBook,
   addBook,
   findBookByID,
-  deleteBook
+  deleteBook,
+
 }
