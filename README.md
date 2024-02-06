@@ -7,9 +7,9 @@ This project is the back-end of a simple Library Management System.
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
 - [APIs](#apis)
-  -[Borrowers](#borrowers)
-  -[Books](#books)
-  -[Borrowed Books](#borrowed-books)
+  - [Borrowers](#borrowers)
+  - [Books](#books)
+  - [Borrowed Books](#borrowed-books)
 
 ## Getting Started
 
