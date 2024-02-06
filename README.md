@@ -6,11 +6,7 @@ This project is the back-end of a simple Library Management System.
 
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
+- [APIs](#apis)
 
 ## Getting Started
 
@@ -35,6 +31,116 @@ Use npm i in the console.
 });
 ```
 
-### Installation
+## APIs
+#### Borrowers
+##
+###### Get all borrowers
+```GET
+GET('localhost:3000/api/v1/borrowers/')
+```
+###### Get borrower by ID
+```GET
+GET('localhost:3000/api/v1/borrowers/:id')
+```
+```
+Required: req.params = { id: Int }
+```
 
-Step-by-step guide on how to install and set up the project.
+###### Add borrower
+```POST
+POST('localhost:3000/api/v1/borrowers/')
+```
+```
+Required: req.body = { name: String, email: String }
+```
+###### Update borrower by id
+```PUT
+PUT('localhost:3000/api/v1/borrowers/:id')
+```
+```
+Required: req.params = { id: Int }
+          req.body = { name: String, email: String }
+          req.body must have one or both to update.
+```
+###### Delete borrower by ID
+```DELETE
+DELETE('localhost:3000/api/v1/borrowers/:id')
+```
+```
+Required: req.params = { id: Int }
+```
+
+#### Books
+##
+###### Get all books
+```GET
+GET('localhost:3000/api/v1/books/')
+```
+###### Get book by ID
+```GET
+GET('localhost:3000/api/v1/books/:id')
+```
+```
+Required: req.params = { id: Int }
+```
+###### Add book
+```POST
+POST('localhost:3000/api/v1/books/')
+```
+```
+Required: req.body = { title, author, isbn, total_quantity, available_quantity, shelf_location }
+```
+###### Update book by id
+```PUT
+PUT('localhost:3000/api/v1/books/:id')
+```
+```
+Required: req.params = { id: Int }
+          req.body = const { title, author, isbn, total_quantity, available_quantity, shelf_location }
+          req.body must have one or more to update.
+```
+###### Delete book by ID
+```DELETE
+DELETE('localhost:3000/api/v1/books/:id')
+```
+```
+Required: req.params = { id: Int }
+```
+###### Find books by title, ISBN, or Author
+```GET
+GET('localhost:3000/api/v1/books/:id')
+```
+```
+Required: req.query = { title, author, isbn }
+          one query parameter only is required.
+          priority is title -> author -> isbn
+```
+
+#### Borrowed Books
+##
+###### Borrow Book
+```POST
+POST('localhost:3000/api/v1/borrowedbooks/:borrowerId/checkout/:bookId')
+```
+```
+Required: req.params = { borrowerId, bookId }
+```
+###### Return Book
+```POST
+POST('localhost:3000/api/v1/borrowedbooks/:borrowerId/return/:bookId')
+```
+```
+Required: req.params = { borrowerId, bookId }
+```
+###### Check Borrowed Books
+```GET
+GET('localhost:3000/api/v1/borrowedbooks/:borrowerId/checkedout')
+```
+```
+Required: req.params = { borrowerId }
+```
+###### Check Overdue Books
+```GET
+GET('localhost:3000/api/v1/borrowedbooks/overdue')
+```
+
