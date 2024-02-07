@@ -4,6 +4,9 @@ const getBooks = async (req, res) => {
   const client = await pool.connect()
   try {
     const query = await pool.query('SELECT * FROM books')
+    if (query.rowCount === 0) {
+      return res.status(404).send({ error: 'There are no books in the system' })
+    }
     res.status(200).json(query.rows)
   } catch (error) {
     throw error
@@ -34,6 +37,9 @@ const findBookByID = async (req, res) => {
   try {
     const { id } = req.params
     const query = await pool.query('SELECT * FROM books WHERE id = $1', [id])
+    if (query.rowCount === 0) {
+      return res.status(404).send({ error: 'Cannot find book' })
+    }
     res.status(200).json(query.rows)
   } catch (error) {
     throw error
@@ -49,6 +55,9 @@ const deleteBook = async (req, res) => {
   try {
     const { id } = req.params
     const query = await pool.query('DELETE FROM books WHERE id = $1', [id])
+    if (query.rowCount === 0) {
+      return res.status(404).send({ error: 'Cannot find book' })
+    }
     res.sendStatus(200)
   }
   catch (error) {
@@ -76,7 +85,7 @@ const findBook = async (req, res) => {
       return res.status(400).json({ error: 'Please provide either title, author, or ISBN for the book search.' });
     }
     if (query.rows.length === 0) {
-      return res.status(404).json({ error: 'Book not found.' });
+      return res.status(404).json({ error: 'No books found with the provided information' });
     }
     res.json(query.rows)
   }
@@ -148,7 +157,10 @@ const updateBook = async (req, res) => {
       `;
     values.push(parseInt(id));
 
-    await pool.query(updateQuery, values);
+    const query = await pool.query(updateQuery, values);
+    if (query.rowCount === 0) {
+      return res.status(404).send({ error: 'Cannot find book' })
+    }
 
     res.sendStatus(200);
   } catch (error) {

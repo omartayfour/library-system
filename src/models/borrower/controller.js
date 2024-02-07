@@ -3,6 +3,9 @@ const getBorrowers = async (req, res) => {
   const client = await pool.connect()
   try {
     const query = await pool.query('SELECT * FROM borrowers')
+    if (query.rowCount === 0) {
+      return res.status(404).send({ error: 'There are no users in the system' })
+    }
     res.status(200).json(query.rows)
   } catch (error) {
     throw error
@@ -17,6 +20,11 @@ const findBorrowerByID = async (req, res) => {
   try {
     const { id } = req.params
     const query = await pool.query('SELECT * FROM borrowers WHERE id = $1', [id])
+
+    if (query.rowCount === 0) {
+      return res.status(404).send({ error: 'User not found' })
+    }
+
     res.status(200).json(query.rows)
   } catch (error) {
     throw error
@@ -76,12 +84,14 @@ const updateBorrower = async (req, res) => {
       `;
     values.push(parseInt(id));
 
-    await pool.query(updateQuery, values);
+    const result = await pool.query(updateQuery, values);
+    if (result.rowCount === 0) {
+      return res.status(404).send({ error: 'User not found' })
+    }
 
     res.sendStatus(200);
   } catch (error) {
-    console.error('Error updating borrower', error);
-    res.sendStatus(500);
+    res.status(500).send('Error updating borrower');
   }
   finally {
     client.release()
@@ -93,6 +103,9 @@ const deleteBorrower = async (req, res) => {
   try {
     const { id } = req.params;
     const query = await pool.query('DELETE FROM borrowers WHERE id = $1', [id])
+    if (query.rowCount === 0) {
+      return res.status(404).send({ error: 'User not found' })
+    }
     res.sendStatus(200)
   }
   catch (error) {
