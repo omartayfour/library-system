@@ -22,7 +22,7 @@ Use npm i in the console.
 ### Prerequisites
 
 - The user must have postgresql installed on their machine.
-- The user must change the pool data to they used when installing postresql.
+- The user must change the pool data to the one they used when installing postresql.
 ```node
  '/src/db.js'
  const pool = new Pool({
@@ -30,9 +30,16 @@ Use npm i in the console.
   host: "localhost", // host
   database: "library", // database name
   password: "1234", // database password
-  port: 5433, // port number
+  port: 5433, // port number of postregsql server
 });
 ```
+- To start the server the user must run the following command
+```
+npm run dev
+```
+- Make sure that you have the correct information and a database created with the same database name as the one you wrote in your pool variable above. The tables will be automatically created when you first run the server.
+
+
 
 ## APIs
 #### Borrowers
