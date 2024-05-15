@@ -1,156 +1,40 @@
-# Library Management System
 
-This project is the back-end of a simple Library Management System.
+# Vending Machine
+
+The project is a simulation of a system which contains multiple vending machines and each vending machine has it's own items stock, each vending machine has it's own authorized operator who can perform a few administrative actions on the machine.
+
+
 
 ## Table of Contents
 
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-- [APIs](#apis)
-  - [Borrowers](#borrowers)
-  - [Books](#books)
-  - [Borrowed Books](#borrowed-books)
-
-## Getting Started
-
-To begin you must install the dependancies.
-```bash
- npm i
-```
-Use npm i in the console.
-
-### Prerequisites
-
-- The user must have postgresql installed on their machine.
-- The user must change the pool data to the one they used when installing postresql.
-```node
- '/src/db.js'
- const pool = new Pool({
-  user: "postgres", // username
-  host: "localhost", // host
-  database: "library", // database name
-  password: "1234", // database password
-  port: 5433, // port number of postregsql server
-});
-```
-- To start the server the user must run the following command
-```
-npm run dev
-```
-- Make sure that you have the correct information and a database created with the same database name as the one you wrote in your pool variable above. The tables will be automatically created when you first run the server.
+- [Features](#features)
+- [FAQ](#faq)
 
 
 
-## APIs
-#### Borrowers
-##
-###### Get all borrowers
-```GET
-GET('localhost:3000/api/v1/borrowers/')
-```
-###### Get borrower by ID
-```GET
-GET('localhost:3000/api/v1/borrowers/:id')
-```
-```
-Required: req.params = { id: Int }
-```
+## Features
 
-###### Add borrower
-```POST
-POST('localhost:3000/api/v1/borrowers/')
-```
-```
-Required: req.body = { name: String, email: String }
-```
-###### Update borrower by id
-```PUT
-PUT('localhost:3000/api/v1/borrowers/:id')
-```
-```
-Required: req.params = { id: Int }
-          req.body = { name: String, email: String }
-          req.body must have one or both to update.
-```
-###### Delete borrower by ID
-```DELETE
-DELETE('localhost:3000/api/v1/borrowers/:id')
-```
-```
-Required: req.params = { id: Int }
-```
+- Customers can buy items.
+- Customers can refund items.
+- Authorized operators can add items.
+- Authorized operators can add money to the machine.
+- Authorized operators can generate machine daily report.
+- Authorized operators can generate machine status report.
 
-#### Books
-##
-###### Get all books
-```GET
-GET('localhost:3000/api/v1/books/')
-```
-###### Get book by ID
-```GET
-GET('localhost:3000/api/v1/books/:id')
-```
-```
-Required: req.params = { id: Int }
-```
-###### Add book
-```POST
-POST('localhost:3000/api/v1/books/')
-```
-```
-Required: req.body = { title, author, isbn, total_quantity, available_quantity, shelf_location }
-```
-###### Update book by id
-```PUT
-PUT('localhost:3000/api/v1/books/:id')
-```
-```
-Required: req.params = { id: Int }
-          req.body = const { title, author, isbn, total_quantity, available_quantity, shelf_location }
-          req.body must have one or more to update.
-```
-###### Delete book by ID
-```DELETE
-DELETE('localhost:3000/api/v1/books/:id')
-```
-```
-Required: req.params = { id: Int }
-```
-###### Find books by title, ISBN, or Author
-```GET
-GET('localhost:3000/api/v1/books/:id')
-```
-```
-Required: req.query = { title, author, isbn }
-          one query parameter only is required.
-          priority is title -> author -> isbn
-```
 
-#### Borrowed Books
-##
-###### Borrow Book
-```POST
-POST('localhost:3000/api/v1/borrowedbooks/:borrowerId/checkout/:bookId')
-```
-```
-Required: req.params = { borrowerId, bookId }
-```
-###### Return Book
-```POST
-POST('localhost:3000/api/v1/borrowedbooks/:borrowerId/return/:bookId')
-```
-```
-Required: req.params = { borrowerId, bookId }
-```
-###### Check Borrowed Books
-```GET
-GET('localhost:3000/api/v1/borrowedbooks/:borrowerId/checkedout')
-```
-```
-Required: req.params = { borrowerId }
-```
-###### Check Overdue Books
-```GET
-GET('localhost:3000/api/v1/borrowedbooks/overdue')
-```
+
+
+## FAQ
+
+#### Language and testing?
+
+Testing all manually done, the program was programmed completely in Java. The database was all in text files.
+
+#### How does the program work?
+
+When you run the program it prompts you to choose whelther you're a customer or an operator. After that you choose one of the vending machines that are in the database. Depending on which user type you've chosen the program will prompt you on the actions you can do as that type of user.
+
+#### What happens if an operator enters correct username and password but has chosen the wrong machine?
+
+The operator will not be allowed to access the machine. Operators can only access machines they are authorized to access.
 
